@@ -1,0 +1,655 @@
+/* Custom Wikipedia Article Styling */
+        #sidebar [class*="rounded"],
+        #onboardingModal [class*="rounded"],
+        #victoryModal [class*="rounded"],
+        #statsModal [class*="rounded"],
+        main > header [class*="rounded"],
+        #loadingOverlay [class*="rounded"],
+        #errorState [class*="rounded"] {
+            border-radius: 0 !important;
+        }
+
+        .wiki-article {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica, Arial, sans-serif;
+            line-height: 1.65;
+            color: #202122;
+        }
+
+        #articleScrollArea {
+            background-color: #fff !important;
+        }
+
+        .objective-article-text {
+            font-family: "Libertinus Serif", "Linux Libertine", Georgia, "Times New Roman", serif;
+        }
+
+        #loadingOverlay {
+            inset: 3.5rem 0 0;
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            border: 0 !important;
+            pointer-events: none;
+        }
+
+        #loadingText {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.85);
+            color: #7f1d1d !important;
+        }
+
+        #wikiContentView > body {
+            background-color: #fff !important;
+            color: #202122 !important;
+        }
+
+        #wikiContentView > body * {
+            color: #202122 !important;
+        }
+
+        #wikiContentView > body a.wikipedle-link {
+            color: #36c !important;
+        }
+
+        .dark .wiki-article {
+            color: #202122;
+        }
+
+        .wiki-article h1, .wiki-article h2, .wiki-article h3, .wiki-article h4 {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+            border-bottom: 1px solid #a2a9b1;
+            margin-top: 1.2em;
+            margin-bottom: 0.4em;
+            padding-bottom: 0.2em;
+            font-weight: normal;
+        }
+
+        .dark .wiki-article h1, .dark .wiki-article h2, .dark .wiki-article h3, .dark .wiki-article h4 {
+            border-bottom-color: #363d4e;
+        }
+
+        .wiki-article h1 { font-size: 1.85rem; }
+        .wiki-article h2 { font-size: 1.5rem; }
+        .wiki-article h3 { font-size: 1.25rem; font-weight: bold; border: none; }
+
+        .wiki-article p {
+            margin-bottom: 1em;
+            font-size: 1.025rem;
+        }
+
+        .wiki-article a {
+            color: #36c;
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 1px transparent dashed;
+            transition: all 0.15s ease;
+            font-weight: 500;
+            padding: 0 1px;
+            border-radius: 2px;
+        }
+
+        .dark .wiki-article a {
+            color: #6d9eeb;
+        }
+
+        .wiki-article a:hover {
+            text-decoration: underline;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Styling for infoboxes and side elements */
+        .wiki-article table.infobox, 
+        .wiki-article table.vertical-navbox,
+        .wiki-article .sidebar {
+            float: right;
+            clear: right;
+            margin: 0 0 1em 1em;
+            background-color: #781010;
+            border: 1px solid #a2a9b1;
+            padding: 0.5em;
+            font-size: 88%;
+            max-width: 320px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        #wikiContentView .infobox,
+        #wikiContentView .vertical-navbox,
+        #wikiContentView figure,
+        #wikiContentView .thumb,
+        #wikiContentView .thumbinner {
+            background-color: #fff !important;
+            border-color: #fff !important;
+        }
+
+        .dark .wiki-article table.infobox,
+        .dark .wiki-article table.vertical-navbox,
+        .dark .wiki-article .sidebar {
+            background-color: #1a202c;
+            border-color: #2d3748;
+            color: #e2e8f0;
+        }
+
+        .wiki-article td, .wiki-article th {
+            padding: 4px 8px;
+        }
+
+        .wiki-article img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .wiki-article ul {
+            list-style-type: disc;
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .wiki-article ol {
+            list-style-type: decimal;
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .wiki-article .thumb {
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            padding: 6px;
+            background-color: #f9f9f9;
+            font-size: 88%;
+            border-radius: 6px;
+        }
+
+        .dark .wiki-article .thumb {
+            background-color: #1e2430;
+            border-color: #2d3748;
+        }
+
+        .wiki-article .thumbinner {
+            text-align: center;
+        }
+
+        @media (max-width: 1023px) {
+            body > .flex.flex-col > #sidebar {
+                height: 52vh;
+                min-height: 0;
+                flex: 0 0 52vh;
+            }
+
+            #sidebar > .flex-1.overflow-y-auto {
+                min-height: 0;
+            }
+
+            body > .flex.flex-col > main {
+                height: auto;
+                flex: 1 1 0%;
+                min-height: 0;
+            }
+        }
+
+        /* Hide unwanted wikipedia clutter elements */
+        .wiki-article .mw-editsection,
+        .wiki-article .navbox,
+        .wiki-article .authority-control,
+        .wiki-article .metadata,
+        .wiki-article .noprint,
+        .wiki-article .mw-empty-elt,
+        .wiki-article .hatnote,
+        .wiki-article .catlinks,
+        .wiki-article .reflist,
+        .wiki-article .references,
+        .wiki-article .cite-bracket {
+            display: none !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        body {
+            background-color: #fff7f7 !important;
+        }
+
+        .dark body {
+            background-color: #19090d !important;
+        }
+
+        #sidebar,
+        main {
+            background-color: #fff !important;
+            border-color: #fecaca !important;
+        }
+
+        .dark #sidebar,
+        .dark main {
+            background-color: #210c12 !important;
+            border-color: #4c1d28 !important;
+        }
+
+        #sidebar [class*="bg-slate-"],
+        #onboardingModal [class*="bg-slate-"],
+        #victoryModal [class*="bg-slate-"],
+        #statsModal [class*="bg-slate-"],
+        main > header {
+            background-color: #fff1f2;
+            border-color: #ffe4e6;
+        }
+
+        main > header.h-14.px-6 {
+            background-color: #fff1f2 !important;
+        }
+
+        .dark main > header.h-14.px-6 {
+            background-color: #35131b !important;
+        }
+
+        #sidebar [class*=" bg-blue-"],
+        #onboardingModal [class*=" bg-blue-"],
+        #victoryModal [class*=" bg-blue-"],
+        #statsModal [class*=" bg-blue-"],
+        main > header [class*=" bg-blue-"],
+        #loadingOverlay [class*=" bg-blue-"],
+        #errorState [class*=" bg-blue-"] {
+            background-color: #dc2626 !important;
+        }
+
+        #sidebar [class*="text-blue-"],
+        #onboardingModal [class*="text-blue-"],
+        #victoryModal [class*="text-blue-"],
+        #statsModal [class*="text-blue-"],
+        main > header [class*="text-blue-"] {
+            color: #b91c1c !important;
+        }
+
+        #sidebar [class*="border-blue-"],
+        #onboardingModal [class*="border-blue-"],
+        #victoryModal [class*="border-blue-"],
+        #statsModal [class*="border-blue-"] {
+            border-color: #fecaca !important;
+        }
+
+        .dark #sidebar [class*="bg-slate-"],
+        .dark #onboardingModal [class*="bg-slate-"],
+        .dark #victoryModal [class*="bg-slate-"],
+        .dark #statsModal [class*="bg-slate-"] {
+            background-color: #35131b !important;
+            border-color: #4c1d28 !important;
+        }
+
+        #sidebar [class*="dark:bg-slate-"],
+        #onboardingModal [class*="dark:bg-slate-"],
+        #victoryModal [class*="dark:bg-slate-"],
+        #statsModal [class*="dark:bg-slate-"] {
+            background-color: #35131b !important;
+            border-color: #4c1d28 !important;
+        }
+
+        .dark #sidebar [class*="bg-blue-"],
+        .dark #onboardingModal [class*="bg-blue-"],
+        .dark #victoryModal [class*="bg-blue-"],
+        .dark #statsModal [class*="bg-blue-"],
+        .dark main > header [class*="bg-blue-"] {
+            background-color: #7f1d1d !important;
+        }
+
+        .dark #sidebar [class*="text-blue-"],
+        .dark #onboardingModal [class*="text-blue-"],
+        .dark #victoryModal [class*="text-blue-"],
+        .dark #statsModal [class*="text-blue-"],
+        .dark main > header [class*="text-blue-"] {
+            color: #fca5a5 !important;
+        }
+
+        .dark #sidebar [class*="border-blue-"],
+        .dark #onboardingModal [class*="border-blue-"],
+        .dark #victoryModal [class*="border-blue-"],
+        .dark #statsModal [class*="border-blue-"] {
+            border-color: #7f1d1d !important;
+        }
+
+        #sidebar [class~="bg-blue-50"],
+        #onboardingModal [class~="bg-blue-50"],
+        #victoryModal [class~="bg-blue-50"],
+        #statsModal [class~="bg-blue-50"],
+        #sidebar [class~="bg-blue-100"],
+        #onboardingModal [class~="bg-blue-100"],
+        #victoryModal [class~="bg-blue-100"],
+        #statsModal [class~="bg-blue-100"] {
+            background-color: #fef2f2 !important;
+        }
+
+        #sidebar [class~="bg-blue-200"],
+        #onboardingModal [class~="bg-blue-200"],
+        #victoryModal [class~="bg-blue-200"],
+        #statsModal [class~="bg-blue-200"] {
+            background-color: #fecaca !important;
+        }
+
+        #sidebar [class~="bg-blue-600"],
+        #onboardingModal [class~="bg-blue-600"],
+        #victoryModal [class~="bg-blue-600"],
+        #statsModal [class~="bg-blue-600"] {
+            background-color: #dc2626 !important;
+        }
+
+        #sidebar [class~="bg-blue-700"],
+        #onboardingModal [class~="bg-blue-700"],
+        #victoryModal [class~="bg-blue-700"],
+        #statsModal [class~="bg-blue-700"] {
+            background-color: #b91c1c !important;
+        }
+
+        .dark #sidebar [class*="bg-blue-950"],
+        .dark #onboardingModal [class*="bg-blue-950"],
+        .dark #victoryModal [class*="bg-blue-950"],
+        .dark #statsModal [class*="bg-blue-950"] {
+            background-color: #450a0a !important;
+        }
+
+        .dark #sidebar [class*="bg-blue-900"],
+        .dark #onboardingModal [class*="bg-blue-900"],
+        .dark #victoryModal [class*="bg-blue-900"],
+        .dark #statsModal [class*="bg-blue-900"] {
+            background-color: #7f1d1d !important;
+        }
+
+        #sidebar h1 {
+            background-image: linear-gradient(to right, #dc2626, #991b1b) !important;
+        }
+
+        #sidebar img[alt="Wikipedle logo"],
+        #onboardingModal img[alt="Wikipedle logo"] {
+            width: 150px !important;
+            height: 150px !important;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2) !important;
+        }
+
+        #sidebar [class*="hover:bg-blue-"]:hover,
+        #onboardingModal [class*="hover:bg-blue-"]:hover,
+        #victoryModal [class*="hover:bg-blue-"]:hover,
+        #statsModal [class*="hover:bg-blue-"]:hover {
+            background-color: #b91c1c !important;
+        }
+
+        #startPlayingBtn:hover {
+            background-color: #9ca3af !important;
+        }
+
+        body {
+            background-color: #d1d5db !important;
+            color: #7f1d1d !important;
+        }
+
+        body.text-slate-900 {
+            color: #7f1d1d !important;
+        }
+
+        #sidebar,
+        main,
+        #onboardingModal > div,
+        #victoryModal > div,
+        #statsModal > div {
+            background-color: #e5e7eb !important;
+            border-color: #000 !important;
+        }
+
+        #sidebar [class*="bg-slate-"],
+        #sidebar [class*="bg-blue-"],
+        #sidebar [class*="bg-emerald-"],
+        #sidebar [class*="bg-rose-"],
+        #sidebar [class*="bg-purple-"],
+        #sidebar [class~="bg-white"],
+        #onboardingModal > div,
+        #onboardingModal [class*="bg-slate-"],
+        #onboardingModal [class*="bg-blue-"],
+        #onboardingModal [class*="bg-emerald-"],
+        #onboardingModal [class*="bg-rose-"],
+        #victoryModal > div,
+        #victoryModal [class*="bg-slate-"],
+        #victoryModal [class*="bg-blue-"],
+        #victoryModal [class*="bg-emerald-"],
+        #victoryModal [class*="bg-rose-"],
+        #statsModal > div,
+        #statsModal [class*="bg-slate-"],
+        #statsModal [class*="bg-blue-"],
+        #statsModal [class*="bg-emerald-"],
+        #statsModal [class*="bg-rose-"],
+        #statsModal [class*="bg-purple-"],
+        main > header,
+        main > header.h-14.px-6 {
+            background-color: #e5e7eb !important;
+        }
+
+        #sidebar *,
+        #onboardingModal,
+        #onboardingModal *,
+        #victoryModal,
+        #victoryModal *,
+        #statsModal,
+        #statsModal *,
+        main > header,
+        main > header *,
+        #loadingOverlay,
+        #loadingOverlay *,
+        #errorState,
+        #errorState * {
+            color: #7f1d1d !important;
+            border-radius: 0 !important;
+        }
+
+        #sidebar h1,
+        #sidebar h2,
+        #onboardingModal h2,
+        #victoryModal h2,
+        #statsModal h2,
+        #sidebar #timerDisplay,
+        #sidebar #clicksDisplay,
+        #victoryModal #modalFinalTime,
+        #victoryModal #modalFinalClicks {
+            color: #dc2626 !important;
+        }
+
+        #sidebar p,
+        #onboardingModal p,
+        #victoryModal p,
+        #statsModal p,
+        #sidebar button,
+        #onboardingModal button,
+        #victoryModal button,
+        #statsModal button,
+        main > header button {
+            color: #b91c1c !important;
+        }
+
+        #sidebar,
+        #sidebar [class*="rounded"],
+        #onboardingModal > div,
+        #onboardingModal [class*="rounded"],
+        #victoryModal > div,
+        #victoryModal [class*="rounded"],
+        #statsModal > div,
+        #statsModal [class*="rounded"],
+        main > header,
+        main > header [class*="rounded"],
+        #loadingOverlay,
+        #loadingOverlay [class*="rounded"],
+        #errorState,
+        #errorState [class*="rounded"] {
+            border: 1px solid #000 !important;
+        }
+
+        #challengeIntroModal {
+            background: rgba(31, 41, 55, 0.45);
+        }
+
+        .challenge-intro-card {
+            background: #e5e7eb;
+            border: 1px solid #000;
+            color: #7f1d1d;
+            font-family: "Libertinus Serif", "Linux Libertine", Georgia, "Times New Roman", serif;
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #victoryModal > div {
+            max-width: 56rem;
+            max-height: none;
+            overflow: visible;
+        }
+
+        #victoryModal > div > * + * {
+            margin-top: 0.25rem !important;
+        }
+
+        #victoryHeading {
+            font-size: 1.75rem;
+        }
+
+        #victorySubheading {
+            font-size: 0.9rem;
+        }
+
+        #victoryModal .text-\[11px\],
+        #victoryModal .text-\[10px\],
+        #victoryModal .text-xs {
+            font-size: 0.8rem;
+        }
+
+        #modalPathList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 1rem;
+            max-height: none;
+            overflow: visible;
+        }
+
+        #modalPathList > div {
+            margin-top: 0;
+        }
+
+        #victoryModal .text-lg {
+            font-size: 1.25rem;
+        }
+
+        #challengeIntroTitle {
+            font-size: 2.5rem;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        #challengeIntroTitle + p {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .challenge-intro-card > * + * {
+            margin-top: 1rem !important;
+        }
+
+        .challenge-page-card {
+            background: #f3f4f6;
+            border: 1px solid #000;
+            min-height: 7rem;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .challenge-page-card > div {
+            flex: 1;
+            text-align: center;
+        }
+
+        #challengeStartTitle.challenge-page-title,
+        #challengeTargetTitle.challenge-page-title {
+            color: #b91c1c;
+            font-size: clamp(2rem, 4.5vw, 2.75rem) !important;
+            line-height: 1.05 !important;
+        }
+
+        .challenge-page-card > div > div:first-child {
+            font-size: 1rem;
+        }
+
+        .challenge-page-image {
+            width: 6rem;
+            height: 6rem;
+            object-fit: cover;
+            background: #d1d5db;
+            border: 1px solid #000;
+        }
+
+        .challenge-journey-divider {
+            color: #7f1d1d;
+            font-family: sans-serif;
+            text-align: center;
+            line-height: 1;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        @media (max-width: 640px) {
+            .challenge-intro-card {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .challenge-page-card {
+                min-height: 5rem;
+                gap: 0.75rem;
+                padding: 0.625rem;
+            }
+
+            .challenge-page-image {
+                width: 4.5rem;
+                height: 4.5rem;
+            }
+
+            #challengeIntroTitle {
+                font-size: 2rem;
+            }
+
+            #challengeStartTitle.challenge-page-title,
+            #challengeTargetTitle.challenge-page-title {
+                font-size: clamp(1.6rem, 6vw, 2.1rem) !important;
+            }
+        }
+
+        #beginChallengeBtn {
+            background: #e5e7eb;
+            border: 1px solid #000;
+            color: #b91c1c;
+            padding-top: 0.625rem;
+            padding-bottom: 0.625rem;
+        }
+
+        #beginChallengeBtn:hover {
+            background: #e8dddd;
+        }
+
+        #sidebar button:hover:not(:disabled),
+        #onboardingModal button:hover:not(:disabled),
+        #victoryModal button:hover:not(:disabled),
+        #statsModal button:hover:not(:disabled),
+        main > header button:hover:not(:disabled) {
+            background-color: #d27979 !important;
+            box-shadow: none !important;
+            filter: none !important;
+        }

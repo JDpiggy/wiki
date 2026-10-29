@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedle - The Daily Wikipedia Speedrun Game</title>
+    <link rel="icon" type="image/png" href="wikipedlelogo.png">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://en.wikipedia.org">
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        wiki: {
+                            light: '#f8f9fa',
+                            dark: '#10141d',
+                            cardLight: '#ffffff',
+                            cardDark: '#1a202c',
+                            accent: '#3b82f6',
+                            accentHover: '#2563eb'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        serif: ['Linux Libertine', 'Georgia', 'Times', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="app.js"></script>
+</head>
+<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+
+    <div class="flex flex-col lg:flex-row h-screen overflow-hidden">
+
+        <!-- ================= SIDEBAR UI ================= -->
+        <aside id="sidebar" class="w-full lg:w-96 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shrink-0 shadow-lg transition-all duration-300">
+            
+            <!-- Header Bar -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img src="wikipedlelogo.png" alt="Wikipedle logo" class="w-10 h-10 rounded-xl object-cover shadow-md shadow-blue-500/20">
+                    <div>
+                        <h1 class="font-black text-xl tracking-tight leading-none bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Wikipedle</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">A daily game in which you click from the day's starting page, to the target page as fast as possible!
+                            GOOD LUCK!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Scrollable Sidebar Body -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                
+                <!-- Game Mode Selector -->
+                <div class="bg-slate-100 dark:bg-slate-800/60 p-1 rounded-xl flex text-sm font-semibold">
+                    <button id="modeDailyBtn" class="flex-1 py-2 px-3 rounded-lg bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm transition flex items-center justify-center space-x-1.5">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <span>Daily Puzzle</span>
+                    </button>
+                    <button id="modePracticeBtn" class="flex-1 py-2 px-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition flex items-center justify-center space-x-1.5">
+                        <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        <span>Practice</span>
+                    </button>
+                </div>
+
+                <!-- Daily Date / Badge Banner -->
+                <div id="gameBadgeBanner" class="flex items-center justify-between px-3 py-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 rounded-lg text-xs font-semibold text-blue-700 dark:text-blue-300">
+                    <span id="badgeDateText">Daily Puzzle #--</span>
+                    <span id="badgeStatus" class="px-2 py-0.5 rounded-full bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-[10px]">IN PROGRESS</span>
+                </div>
+
+                <!-- Timer & Clicks Dashboard -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 p-3 rounded-xl flex flex-col justify-center items-center text-center">
+                        <div class="flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
+                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                            <span>TIME ELAPSED</span>
+                        </div>
+                        <div id="timerDisplay" class="text-2xl font-black font-mono tracking-tight text-slate-800 dark:text-slate-100">
+                            00:00
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 p-3 rounded-xl flex flex-col justify-center items-center text-center">
+                        <div class="flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
+                            <i data-lucide="mouse-pointer-2" class="w-3.5 h-3.5"></i>
+                            <span>CLICKS / HOPS</span>
+                        </div>
+                        <div id="clicksDisplay" class="text-2xl font-black font-mono tracking-tight text-slate-800 dark:text-slate-100">
+                            0
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge Objective Box -->
+                <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
+                    <!-- Start Article -->
+                    <div class="flex items-start space-x-3">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 objective-article-text">
+                            <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Start Article</div>
+                            <div id="startTitle" class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">
+                                Loading...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow Divider -->
+                    <div class="flex items-center justify-center -my-1">
+                        <div class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+                        <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400 my-1 mx-2"></i>
+                        <div class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+                    </div>
+
+                    <!-- Target Article -->
+                    <div class="flex items-start space-x-3">
+                        <div class="w-7 h-7 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                            <i data-lucide="target" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 objective-article-text">
+                            <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Target Article</div>
+                            <div id="targetTitle" class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">
+                                Loading...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center gap-2">
+                    <button id="undoBtn" disabled class="flex-1 py-2.5 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-700 dark:text-slate-300">
+                        <i data-lucide="undo-2" class="w-4 h-4"></i>
+                        <span>Go Back (Undo)</span>
+                    </button>
+                    
+                    <button id="restartBtn" class="py-2.5 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 text-slate-700 dark:text-slate-300" title="Restart Level">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Live Path Breadcrumbs Trail -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                        <span>Path Taken</span>
+                        <span id="pathCount" class="text-[10px] bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-700 dark:text-slate-300">1 node</span>
+                    </div>
+
+                    <div id="pathContainer" class="max-h-44 overflow-y-auto space-y-1.5 pr-1 text-xs">
+                        <!-- Breadcrumb list dynamic -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer info -->
+            <div class="p-3 border-t border-slate-200 dark:border-slate-800 text-center text-[11px] text-slate-400 dark:text-slate-500">
+                Jaron Dembsky
+            </div>
+        </aside>
+
+        <!-- ================= MAIN CONTENT AREA ================= -->
+        <main class="flex-1 flex flex-col h-full bg-white dark:bg-slate-900 overflow-hidden relative">
+            
+            <!-- Article Header Navigation Bar -->
+            <header class="h-14 px-6 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center shrink-0 z-10">
+                <div class="flex items-center space-x-3 overflow-hidden">
+                    <button id="mobileMenuToggle" class="lg:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+                        <i data-lucide="panel-left" class="w-5 h-5"></i>
+                    </button>
+                    <div class="flex flex-col overflow-hidden">
+                        <div class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Current Article</div>
+                        <h2 id="currentArticleTitle" class="text-lg font-bold truncate text-slate-900 dark:text-slate-100">
+                            Loading Article...
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center space-x-2">
+                    <button id="helpBtn" title="What am I doing here" aria-label="What am I doing here" class="flex items-center space-x-2 px-3 py-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition text-xs font-semibold">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
+                        <span>What am I doing here?</span>
+                    </button>
+                    <button id="statsBtn" title="Stats" aria-label="Stats" class="flex items-center space-x-2 px-3 py-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition text-xs font-semibold">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                        <span>Stats</span>
+                    </button>
+                </div>
+
+                <div class="flex justify-self-end items-center space-x-2">
+                    <button id="giveUpBtn" class="hidden sm:flex items-center space-x-1.5 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-900/50 transition font-semibold">
+                        <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                        <span>Give Up</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Loading State -->
+            <div id="loadingOverlay" class="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-200" aria-live="polite">
+                <p id="loadingText" class="text-sm font-semibold">Fetching Wikipedia Article...</p>
+            </div>
+
+            <!-- Error State Box -->
+            <div id="errorState" class="hidden absolute inset-0 bg-white dark:bg-slate-900 z-20 flex flex-col items-center justify-center p-6 text-center space-y-4">
+                <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-600 flex items-center justify-center">
+                    <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Unable to load article</h3>
+                <p id="errorMessage" class="text-sm text-slate-500 dark:text-slate-400 max-w-md">There was a problem fetching this Wikipedia page.</p>
+                <button id="retryBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition">
+                    Retry Page Load
+                </button>
+            </div>
+
+            <!-- Article Content Viewer -->
+            <div id="articleScrollArea" class="flex-1 overflow-y-auto px-4 sm:px-8 lg:px-16 py-8">
+                <div id="wikiContentView" class="wiki-article max-w-4xl mx-auto">
+                    <!-- Wikipedia content injected dynamically -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ================= MODAL: CHALLENGE PREVIEW ================= -->
+    <div id="challengeIntroModal" class="fixed inset-0 bg-slate-950/60 z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="challengeIntroTitle">
+        <div class="challenge-intro-card w-full max-w-2xl p-6 space-y-5">
+            <div class="text-center">
+                <h2 id="challengeIntroTitle" class="text-2xl font-bold">Your Challenge</h2>
+                <p class="mt-1 text-sm">Get from the starting page to the target page using Wikipedia links.</p>
+            </div>
+
+            <div class="challenge-page-card flex items-center gap-4 p-3">
+                <img id="challengeStartImage" class="challenge-page-image shrink-0" alt="" hidden>
+                <div class="min-w-0">
+                    <div class="text-xs font-semibold uppercase tracking-wide">Start page</div>
+                    <div id="challengeStartTitle" class="challenge-page-title text-xl font-bold break-words">Loading...</div>
+                </div>
+            </div>
+
+            <div class="challenge-journey-divider" aria-hidden="true">↓</div>
+
+            <div class="challenge-page-card flex items-center gap-4 p-3">
+                <img id="challengeTargetImage" class="challenge-page-image shrink-0" alt="" hidden>
+                <div class="min-w-0">
+                    <div class="text-xs font-semibold uppercase tracking-wide">Target page</div>
+                    <div id="challengeTargetTitle" class="challenge-page-title text-xl font-bold break-words">Loading...</div>
+                </div>
+            </div>
+
+            <button id="beginChallengeBtn" class="w-full py-3 font-bold transition">
+                Start Challenge
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: HOW TO PLAY / ONBOARDING ================= -->
+    <div id="onboardingModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            <button id="closeOnboardingBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center space-x-3">
+                <img src="wikipedlelogo.png" alt="Wikipedle logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-blue-500/30">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">How to Play Wikipedle</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">The Daily Wikipedia Speedrun</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                <div class="flex items-start space-x-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+                    <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
+                    <p>You start on a random <strong>Start Article</strong> and must reach the designated <strong>Target Article</strong>.</p>
+                </div>
+
+                <div class="flex items-start space-x-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+                    <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</div>
+                    <p>The timer starts when you click your first link.</p>
+                </div>
+
+                <div class="flex items-start space-x-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+                    <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</div>
+                    <p>Navigate strictly by <strong>clicking inline blue links</strong> inside the Wikipedia article text.</p>
+                </div>
+
+                <div class="flex items-start space-x-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+                    <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">4</div>
+                    <p>Reach the target in the <strong>fewest clicks</strong> and <strong>fastest time</strong>. Every player gets the exact same Daily Challenge!</p>
+                </div>
+            </div>
+
+            <button id="startPlayingBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg shadow-blue-600/20 text-sm">
+                Got it, Let's Play!
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: VICTORY / GAME OVER ================= -->
+    <div id="victoryModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-3xl w-full p-3 shadow-2xl space-y-2 text-center relative animate-in fade-in zoom-in-95 duration-200">
+            
+            <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
+                <i data-lucide="trophy" class="w-6 h-6"></i>
+            </div>
+
+            <div>
+                <h2 id="victoryHeading" class="text-2xl font-black text-slate-900 dark:text-slate-100">Target Reached!</h2>
+                <p id="victorySubheading" class="text-xs text-slate-500 dark:text-slate-400 mt-1">You navigated Wikipedia like a master!</p>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div>
+                    <div class="text-[11px] font-bold text-slate-400 uppercase">Time Elapsed</div>
+                    <div id="modalFinalTime" class="text-xl font-mono font-black text-slate-800 dark:text-slate-100">00:00</div>
+                </div>
+                <div>
+                    <div class="text-[11px] font-bold text-slate-400 uppercase">Total Hops</div>
+                    <div id="modalFinalClicks" class="text-xl font-mono font-black text-slate-800 dark:text-slate-100">0</div>
+                </div>
+            </div>
+
+            <section class="space-y-2 text-left">
+                <h3 class="text-sm font-bold uppercase">Your Statistics</h3>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div id="victoryStatDailyTime" class="text-lg font-bold">--</div>
+                        <div class="text-[10px] uppercase font-semibold">Today's Time</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div id="victoryStatWins" class="text-lg font-bold">0</div>
+                        <div class="text-[10px] uppercase font-semibold">Completed</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div id="victoryStatStreak" class="text-lg font-bold">0</div>
+                        <div class="text-[10px] uppercase font-semibold">Streak</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div id="victoryStatBestTime" class="text-lg font-bold">--</div>
+                        <div class="text-[10px] uppercase font-semibold">Best Time</div>
+                    </div>
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 p-3 text-center">
+                    <div class="text-xs font-semibold">Next Daily Puzzle In</div>
+                    <div id="victoryCountdownTimer" class="text-lg font-mono font-bold">00:00:00</div>
+                </div>
+            </section>
+
+            <!-- Path summary text -->
+            <div class="text-left">
+                <div class="text-xs font-bold text-slate-400 uppercase mb-1">Your Route</div>
+                <div id="modalPathList" class="max-h-28 overflow-y-auto text-xs bg-slate-100 dark:bg-slate-950 p-2.5 rounded-lg space-y-1 font-mono text-slate-600 dark:text-slate-300">
+                    <!-- Path rendered here -->
+                </div>
+            </div>
+
+            <!-- Copy Share & Action Buttons -->
+            <div class="space-y-2">
+                <button id="shareBtn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-600/20 text-sm flex items-center justify-center space-x-2">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    <span>Copy Results to Clipboard</span>
+                </button>
+                <div id="shareCopiedAlert" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                    ✓ Results copied to clipboard!
+                </div>
+                
+                <button id="closeVictoryModalBtn" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-xs transition">
+                    Return to Site
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: USER STATS ================= -->
+    <div id="statsModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-5">
+            <button id="closeStatsBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center space-x-2">
+                <i data-lucide="bar-chart-2" class="w-5 h-5 text-blue-600"></i>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Your Statistics</h2>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div id="statDailyTime" class="text-xl font-bold">--</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Today's Time</div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div id="statWins" class="text-xl font-bold">0</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Completed</div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div id="statStreak" class="text-xl font-bold">0</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Streak</div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div id="statBestTime" class="text-xl font-bold">--</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Best Time</div>
+                </div>
+            </div>
+
+            <!-- Next Daily Puzzle Timer -->
+            <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 p-3 rounded-xl text-center">
+                <div class="text-xs text-blue-600 dark:text-blue-400 font-semibold">Next Daily Puzzle In</div>
+                <div id="countdownTimer" class="text-lg font-mono font-bold text-blue-900 dark:text-blue-200">00:00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+</body>
+</html>
